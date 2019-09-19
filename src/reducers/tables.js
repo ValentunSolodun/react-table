@@ -1,4 +1,4 @@
-const initialState = [['text', 'text', 'text'], ['text', 'text', 'text']];
+const initialState = [['', '', ''], ['', '', '']];
 
 // [[1,1,1]]
 
@@ -8,7 +8,7 @@ const tables = (state = initialState, action) => {
         function row(){
           let newState = [];
           for(let i = 0; i < state[0].length; i++) {
-            newState.push('text');
+            newState.push('');
           }
           return newState;
         }
@@ -21,12 +21,21 @@ const tables = (state = initialState, action) => {
         let newState = [...state];
         for (let i = 0; i < state.length; i++) {
           let newStateItem = [...state[i]];
-          newStateItem.push('text');
+          newStateItem.push('');
           newState[i] = newStateItem;
         }
         return newState;
       }
-      return [...col()]
+      return [...col()];
+    case 'CHANGE_CELL':
+      function cell() {
+        let newCell = [...state[action.idRow]];
+        newCell.splice(action.idCol,1, action.val);
+        let newState = [...state];
+        newState.splice(action.idRow, 1, newCell);
+        return newState;
+      }
+      return [...cell()];
     default:
       return state
   }

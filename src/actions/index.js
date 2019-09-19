@@ -8,4 +8,11 @@ const addRow = () => ({
     text: 'test 1'
 });
 
-export {addRow, addColumn};
+const changeCell = (indexCol, indexRow, value) => ({
+    type: 'CHANGE_CELL',
+    idCol: indexCol,
+    idRow: indexRow,
+    val: value
+});
+
+export {addRow, addColumn, changeCell};
