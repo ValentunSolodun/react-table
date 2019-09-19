@@ -1,7 +1,9 @@
 import React from 'react'
 import Table from '../components/Table'
-import ButtonAddRow from '../components/ButtonAddRow'
-import ButtonAddCol from '../components/ButtonAddCol'
+import Buttons from './Buttons';
+// import ButtonAddRow from '../components/ButtonAddRow'
+// import ButtonAddCol from '../components/ButtonAddCol'
+
 // import Footer from './Footer'
 // import AddTodo from '../containers/AddTodo'
 // import VisibleTodoList from '../containers/VisibleTodoList'
@@ -9,8 +11,7 @@ import ButtonAddCol from '../components/ButtonAddCol'
 const App = () => (
   <div>
     <Table />
-    <ButtonAddRow />
-    <ButtonAddCol />
+    <Buttons />
   </div>
 )
 

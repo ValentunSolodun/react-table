@@ -1,0 +1,31 @@
+table,
+td,
+tr {
+    border: 1px solid #4c4c4c;
+}
+
+table {
+    width: 50% !important;
+    margin: 10px auto;
+    position: relative;
+}
+
+button {
+    position: absolute;
+}
+
+table input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 5px;
+}
+
+button.btn-add-column {
+    top: 0;
+    right: -120px;
+}
+
+button.btn-add-row {
+    bottom: -45px;
+    left: 0;
+}

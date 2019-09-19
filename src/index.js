@@ -16,5 +16,5 @@ render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('fieldToShow')
+  document.getElementById('root')
 )
