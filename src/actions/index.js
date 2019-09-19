@@ -1,11 +1,17 @@
 const addColumn = () => ({
-    type: 'ADD_COL',
-    text: 'test'
+    type: 'ADD_COL'
 });
 
 const addRow = () => ({
-    type: 'ADD_ROW',
-    text: 'test 1'
+    type: 'ADD_ROW'
+});
+
+const removeRow = () => ({
+    type: 'REMOVE_ROW'
+});
+
+const removeColumn = () => ({
+    type: 'REMOVE_COL'
 });
 
 const changeCell = (indexCol, indexRow, value) => ({
@@ -15,4 +21,4 @@ const changeCell = (indexCol, indexRow, value) => ({
     val: value
 });
 
-export {addRow, addColumn, changeCell};
+export {addRow, addColumn, removeRow, removeColumn, changeCell};

@@ -1,0 +1,19 @@
+.btn_add_column {
+    top: 0;
+    right: -120px;
+}
+
+button.btn_add_row {
+    bottom: -45px;
+    left: 0;
+}
+
+button.btn_remove_row {
+    bottom: -90px;
+    left: 0;
+}
+
+.btn_remove_column {
+    top: 45px;
+    right: -120px;
+}

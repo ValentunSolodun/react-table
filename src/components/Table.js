@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { changeCell } from '../actions/index'
-import './Table.css';
+import styled from './Table.css';
 
 // import TableList from '../containers/tableList';
 
@@ -16,7 +16,7 @@ const Table = function (state, {changeCl}) {
     }
 
     return (
-        <table>
+        <table className={styled.table}>
             <tbody>
                 {generateTable(state)}
             </tbody>

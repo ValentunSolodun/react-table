@@ -1,41 +1,73 @@
 const initialState = [['', '', ''], ['', '', '']];
 
-// [[1,1,1]]
-
 const tables = (state = initialState, action) => {
+
+  //add a row
+  function addRow() {
+    let newState = [];
+    for (let i = 0; i < state[0].length; i++) {
+      newState.push('');
+    }
+    return newState;
+  }
+  //
+
+  //remove a row
+  function removeRow() {
+    let newState = [...state];
+    newState.pop();
+    return newState;
+  }
+  //
+
+  //add a column
+  function addCol() {
+    let newState = [...state];
+    for (let i = 0; i < state.length; i++) {
+      let newStateItem = [...state[i]];
+      newStateItem.push('');
+      newState[i] = newStateItem;
+    }
+    return newState;
+  }
+  //
+
+  //remove a column
+  function removeCol() {
+    let newState = [...state];
+    for (let i = 0; i < state.length; i++) {
+      let newStateItem = [...state[i]];
+      newStateItem.pop();
+      newState[i] = newStateItem;
+    }
+    return newState;
+  }
+  //
+
+  //change single cell
+  function uptateCell() {
+    let newCell = [...state[action.idRow]];
+    newCell.splice(action.idCol, 1, action.val);
+    let newState = [...state];
+    newState.splice(action.idRow, 1, newCell);
+    return newState;
+  }
+  //
+
   switch (action.type) {
     case 'ADD_ROW':
-        function row(){
-          let newState = [];
-          for(let i = 0; i < state[0].length; i++) {
-            newState.push('');
-          }
-          return newState;
-        }
       return [
         ...state,
-        row()
+        addRow()
       ];
+    case 'REMOVE_ROW':
+      return [...removeRow()]
     case 'ADD_COL':
-      function col() {
-        let newState = [...state];
-        for (let i = 0; i < state.length; i++) {
-          let newStateItem = [...state[i]];
-          newStateItem.push('');
-          newState[i] = newStateItem;
-        }
-        return newState;
-      }
-      return [...col()];
+      return [...addCol()];
+    case 'REMOVE_COL':
+      return [...removeCol()];
     case 'CHANGE_CELL':
-      function cell() {
-        let newCell = [...state[action.idRow]];
-        newCell.splice(action.idCol,1, action.val);
-        let newState = [...state];
-        newState.splice(action.idRow, 1, newCell);
-        return newState;
-      }
-      return [...cell()];
+      return [...uptateCell()];
     default:
       return state
   }
