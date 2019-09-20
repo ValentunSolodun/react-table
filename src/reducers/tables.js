@@ -1,6 +1,6 @@
-const initialState = [['', '', ''], ['', '', '']];
+let initialState = [];
 
-const tables = (state = initialState, action) => {
+const tables = (state = initialState, action, loadIndication) => {
 
   //add a row
   function addRow() {
@@ -46,6 +46,19 @@ const tables = (state = initialState, action) => {
 
   //change single cell
   function uptateCell() {
+    fetch('http://localhost:3001/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify({
+        user: {
+          name: "John",
+          email: "john@example.com"
+        }
+      }),
+      mode: 'no-cors'
+    })
     let newCell = [...state[action.idRow]];
     newCell.splice(action.idCol, 1, action.val);
     let newState = [...state];
@@ -55,6 +68,10 @@ const tables = (state = initialState, action) => {
   //
 
   switch (action.type) {
+    case 'FETCHING_DATA':
+      return action.payload;
+    case 'SUCCESSFUL_DATA':
+      return action.payload;
     case 'ADD_ROW':
       return [
         ...state,
