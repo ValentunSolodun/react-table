@@ -3,13 +3,6 @@ import Table from '../components/Table'
 import Button from './Button';
 import {addRow, addColumn, removeRow, removeColumn } from '../actions/index';
 import styles  from './Button.module.css'
-// import ButtonAddRow from '../components/ButtonAddRow'
-// import ButtonAddCol from '../components/ButtonAddCol'
-
-// import Footer from './Footer'
-// import AddTodo from '../containers/AddTodo'
-// import VisibleTodoList from '../containers/VisibleTodoList'
-
 
 const App = () => (
   <div>

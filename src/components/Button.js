@@ -3,7 +3,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 const Button = function ({action, text, style, state, actionToAdd}) {
-    console.log(arguments);
+    // console.log(arguments);
     return (
         <button onClick={() => actionToAdd()} className={"btn btn-primary " + style}>{text}</button>
     )
@@ -18,5 +18,4 @@ const mapDispatchToProps = (dispatch, {onClick}) => ({
 });
 
 export default connect(
-    mapStateToProps, mapDispatchToProps)
-    (Button);
+    mapStateToProps, mapDispatchToProps)(Button);

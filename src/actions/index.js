@@ -32,7 +32,8 @@ const getTable = () => dispatch => {
         for (let i = 0; i < data.length; i++) {
             let arr = [];
             data.filter((item, index) => {
-                if (item.id_row == i) arr.push(item.text);
+                if (item.id_row === i) return arr.push(item.text);
+                return null;
             });
             if (arr.length) array.push(arr);
         }

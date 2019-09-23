@@ -1,64 +1,83 @@
 let initialState = [];
 
-const tables = (state = initialState, action, loadIndication) => {
+const tables = (state = initialState, action) => {
 
-  //add a row
-  function addRow() {
-    let newState = [];
-    for (let i = 0; i < state[0].length; i++) {
-      newState.push('');
+  function apiFetch(url, body) {
+    fetch(url, {
+      method: "POST",
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    }).then(response => response.json()).then(json => console.log(json));
+  }
+
+  function addFields(param) {
+
+    let updateParam = {
+      columnLength: state[0].length,
+      rowLength: state.length,
+      type: `ADD${param}`
     }
-    return newState;
-  }
-  //
 
-  //remove a row
-  function removeRow() {
-    let newState = [...state];
-    newState.pop();
-    return newState;
-  }
-  //
+    if (param === 'ROW') {
+      apiFetch('http://localhost:3001/', updateParam);
+      let newState = [];
+      for (let i = 0; i < state[0].length; i++) {
+        newState.push('');
+      }
+      return newState;
+    } else if (param === 'COLUMN') {
+      apiFetch('http://localhost:3001/', updateParam);
 
-  //add a column
-  function addCol() {
-    let newState = [...state];
-    for (let i = 0; i < state.length; i++) {
-      let newStateItem = [...state[i]];
-      newStateItem.push('');
-      newState[i] = newStateItem;
+      let newState = [...state];
+      for (let i = 0; i < state.length; i++) {
+        let newStateItem = [...state[i]];
+        newStateItem.push('');
+        newState[i] = newStateItem;
+      }
+      return newState;
     }
-    return newState;
   }
-  //
 
-  //remove a column
-  function removeCol() {
-    let newState = [...state];
-    for (let i = 0; i < state.length; i++) {
-      let newStateItem = [...state[i]];
-      newStateItem.pop();
-      newState[i] = newStateItem;
+  function removeFields(param) {
+
+    let updateParam = {
+      index: param === 'ROW' ? state.length : state[0].length,
+      type: `REMOVE${param}`
     }
-    return newState;
+
+    if (param === 'ROW') {
+      apiFetch('http://localhost:3001/', updateParam);
+
+      let newState = [...state];
+      newState.pop();
+      return newState;
+    } else if (param === 'COLUMN') {
+      apiFetch('http://localhost:3001/', updateParam);
+
+      let newState = [...state];
+      for (let i = 0; i < state.length; i++) {
+        let newStateItem = [...state[i]];
+        newStateItem.pop();
+        newState[i] = newStateItem;
+      }
+      return newState;
+    }
   }
-  //
 
   //change single cell
   function uptateCell() {
-    fetch('http://localhost:3001/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8'
-      },
-      body: JSON.stringify({
-        user: {
-          name: "John",
-          email: "john@example.com"
-        }
-      }),
-      mode: 'no-cors'
-    })
+
+    let updateParam = {
+      idRow: action.idRow,
+      idCol: action.idCol,
+      value: action.val,
+      type: "UPDATE"
+    }
+
+    apiFetch('http://localhost:3001/', updateParam);
+
     let newCell = [...state[action.idRow]];
     newCell.splice(action.idCol, 1, action.val);
     let newState = [...state];
@@ -75,14 +94,14 @@ const tables = (state = initialState, action, loadIndication) => {
     case 'ADD_ROW':
       return [
         ...state,
-        addRow()
+        addFields('ROW')
       ];
     case 'REMOVE_ROW':
-      return [...removeRow()]
+      return [...removeFields('ROW')]
     case 'ADD_COL':
-      return [...addCol()];
+      return [...addFields('COLUMN')];
     case 'REMOVE_COL':
-      return [...removeCol()];
+      return [...removeFields('COLUMN')];
     case 'CHANGE_CELL':
       return [...uptateCell()];
     default:
