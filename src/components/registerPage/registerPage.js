@@ -1,37 +1,47 @@
 import React from 'react';
 import styled from './registerPage.module.css'
 import { connect } from 'react-redux';
-import { registerAction } from '../../actions/auth';
+import { registerAction, validationAction } from '../../actions/auth';
 
-const Register = (...rest) => {
-    console.log(rest);
+
+const Register = ({ registaration, validation, user }) => {
+    console.log(user);
     return (
         <div className={styled.form_register_wrapper}>
-            <form className={styled.form}>
+            <form className={styled.form} onSubmit={registaration}>
                 <div className="form-group">
                     <label htmlFor="name">Name</label>
-                    <input type="text" className="form-control" id="name" placeholder="Enter email" />
+                    <input onInput={validation} type="text" className="form-control" id="name" placeholder="Enter name" />
+                    <small className="form-text text-muted">More then 1 characters</small>
                 </div>
                 <div className="form-group">
                     <label htmlFor="email_adress">Email address</label>
-                    <input type="email" className="form-control" id="email_adress" placeholder="Enter email" />
+                    <input onInput={validation} type="email" className="form-control" id="email_adress" placeholder="Enter email" />
                 </div>
                 <div className="form-group">
                     <label htmlFor="password">Password</label>
-                    <input type="password" className="form-control" id="password" placeholder="Password" />
+                    <input onInput={validation} type="password" className="form-control" id="password" placeholder="Password" />
+                    <small className="form-text text-muted">More then 5 characters</small>
                 </div>
-                <button type="submit" className="btn btn-primary">Register</button>
+                <button disabled={!user.errors.nameValid || !user.errors.emailValid || !user.errors.passwordValid} type="submit" className="btn btn-primary">Register</button>
             </form>
+            {user.result ? (
+                <div className={`${styled.alert} alert alert-danger`} role="alert">
+                    {user.result}
+                </div>
+            ) : (null) }
+
         </div>
     );
 }
 
 const mapStateToProps = state => ({
-    tables: state.tables,
+    user: state.user
 });
 
 const mapDispatchToProps = dispatch => ({
-    registaration: () => dispatch(registerAction())
+    registaration: e => dispatch(registerAction(e)),
+    validation: e => dispatch(validationAction(e))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

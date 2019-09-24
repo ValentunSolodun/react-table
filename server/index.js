@@ -3,21 +3,11 @@ const mysql = require('mysql');
 const app = express();
 const port = 3001;
 const bodyParser = require("body-parser");
+const Users = require("./routes/Users");
+const db = require('./databases/db');
 
 var cors = require('cors')
 app.use(cors())
-
-const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "12345",
-  database: 'tables'
-});
-
-db.connect(function(err) {
-  if(err) throw new Error(err);
-  console.log("Connected!");
-});
 
 app.use(bodyParser.urlencoded({
     extended: true
@@ -25,17 +15,9 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 
 app.get('/', (req, res) => {
-	db.query("SELECT * FROM texts", function(err, rows) {
-		res.send(rows);
-	});
+	db.query("SELECT * FROM texts").then(rows => res.send(rows));
 });
 app.post('/', (req, res) => {
-
-	// function addRow(columnLength, indexRow) {
-	// 	for(let i = 0; i < columnLength; i++) {
-	// 		db.query(`INSERT into texts (id_row, id_column, text) VALUES (${indexRow}, ${i}, ' ')`);
-	// 	}
-	// }
 
 	function resultQuery(err, result) {
 		if(err) throw new Error(err);
@@ -45,37 +27,23 @@ app.post('/', (req, res) => {
 	function addFields(type, columnLength, rowLength) {
 		if(type === 'ADDROW') {
 			for(let i = 0; i < columnLength; i++) {
-				db.query(`INSERT into texts (id_row, id_column, text) VALUES (${rowLength}, ${i}, ' ')`, resultQuery);
+				db.query(`INSERT into texts (id_row, id_column, text) VALUES (${rowLength}, ${i}, ' ')`).then(done => resultQuery(false, done));
 			}
 		}else if(type === 'ADDCOLUMN') {
 			for(let i = 0; i < rowLength; i++) {
-				db.query(`INSERT into texts (id_row, id_column, text) VALUES (${i}, ${columnLength}, ' ')`, resultQuery);
+				db.query(`INSERT into texts (id_row, id_column, text) VALUES (${i}, ${columnLength}, ' ')`).then(done => resultQuery(false, done));
 			}
 		}
 	}
 
 	function removeFields(type, index) {
 		if(type === 'REMOVEROW') {
-			one = db.query(`DELETE FROM texts WHERE id_row = ${index - 1}`, resultQuery);
+			one = db.query(`DELETE FROM texts WHERE id_row = ${index - 1}`).then(done => resultQuery(false, done));
 		}else if(type === 'REMOVECOLUMN') {
-			one = db.query(`DELETE FROM texts WHERE id_column = ${index - 1}`, resultQuery);
+			one = db.query(`DELETE FROM texts WHERE id_column = ${index - 1}`).then(done => resultQuery(false, done));
 		}
 
 	}
-
-	// function removeRow(indexRow) {
-		
-	// }
-
-	// function addColumn(indexColumn, rowLength) {
-	// 	for(let i = 0; i < rowLength; i++) {
-	// 		db.query(`INSERT into texts (id_row, id_column, text) VALUES (${i}, ${indexColumn}, ' ')`);
-	// 	}
-	// }
-
-	// function removeColumn(indexColumn) {
-	// 	db.query(`DELETE FROM texts WHERE id_column = ${indexColumn - 1}`);
-	// }
 
 	function updateCell(value, idRow, idCol) {
 		db.query(`UPDATE texts SET text = '${value}' WHERE id_row = ${idRow} AND id_column = ${idCol}`);
@@ -101,5 +69,8 @@ app.post('/', (req, res) => {
 			console.log('default');	
 	}
 });
+
+app.use('/users', Users);
+
 
 app.listen(port, () => console.log('server created'));
