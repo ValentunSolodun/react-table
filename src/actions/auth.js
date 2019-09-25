@@ -1,4 +1,19 @@
 import { history } from '../helpers/history'
+import cookie from 'react-cookies';
+
+// export const tokenCheck = () => dispatch => {
+//     let token = localStorage.getItem('token');
+
+//     console.log('send')
+//     fetch('http://localhost:3001/', {
+//         method: 'POST',
+//         headers: {
+//             'Content-Type': 'application/json'
+//         },
+//         body: JSON.stringify({ token })
+//     })
+//         .then(res => console.log(res));
+// }
 
 export const registerAction = e => dispatch => {
     e.preventDefault();
@@ -39,13 +54,20 @@ export const loginAction = e => dispatch => {
         },
         body: JSON.stringify(objDispatch)
     })
-        .then(response => response.text())
+        .then(response => {
+            if(response.status === 403) {
+                return "";
+            }
+            return response.text();
+        })
         .then(
             text => {
-                if (text === 'logined') history.push('/')
-                else dispatch({ type: 'LOGINRESULT', payload: text })
-            },
-            err => console.log(err)
+                if(text) {
+                    cookie.save('token', text , { path: '/' });
+                    history.push('/');
+                    dispatch({ type: 'LOGINRESULT', payload: text })
+                }
+            }
         );
 }
 

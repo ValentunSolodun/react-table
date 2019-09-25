@@ -5,9 +5,11 @@ import styled from './Table.css';
 
 const Table = function (state) {
 
+    console.log(state);
+
     function generateTable(st) {
         if(st.tables.loading === true) return <tr><td>Loading...</td></tr>
-        else if (!st.tables.length) return <tr><td>Teble is empty. Add a row></td></tr>;
+        else if (!st.tables.length) return <tr><td>Table is empty.</td></tr>;
         else {
             return st.tables.map((item, indexRow) => {
                 return (
@@ -28,7 +30,7 @@ const Table = function (state) {
 
 const mapStateToProps = state => ({
     tables: state.tables,
-    loadIndication: state.loading
+    user: state.user
 })
 
 const mapDispatchToProps = dispatch => {

@@ -1,3 +1,5 @@
+import { history } from '../helpers/history'
+import cookie from 'react-cookies';
 const addColumn = () => ({
     type: 'ADD_COL'
 });
@@ -22,10 +24,21 @@ const changeCell = (indexCol, indexRow, value) => ({
 });
 
 const getTable = () => dispatch => {
-    dispatch({ type: 'FETCHING_DATA', payload: {loading: true}})
-    fetch('http://localhost:3001/')
-        .then(response => response.json())
-        .then(json => { dispatch({ type: 'SUCCESSFUL_DATA', payload: formatingResponse(json) }) });
+    dispatch({ type: 'FETCHING_DATA', payload: { loading: true } })
+    fetch('http://localhost:3001/', {
+        method: 'GET',
+        headers: { 
+            'token' : cookie.load('token')
+        }
+    })
+        .then(response => {
+            if (response.status === 403) {
+                history.push('/login');
+            } else {
+                return response.json();
+            }
+        })
+        .then(json => json ? dispatch({ type: 'SUCCESSFUL_DATA', payload: formatingResponse(json) }) : false);
 
     function formatingResponse(data) {
         let array = [];

@@ -1,3 +1,4 @@
+import cookie from 'react-cookies';
 let initialState = [];
 
 const tables = (state = initialState, action) => {
@@ -6,7 +7,8 @@ const tables = (state = initialState, action) => {
     fetch(url, {
       method: "POST",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'token': cookie.load('token')
       },
       body: JSON.stringify(body)
     }).then(response => response.json()).then(json => console.log(json));
