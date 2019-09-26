@@ -2,6 +2,7 @@ import React from 'react';
 import styled from './registerPage.module.css'
 import { connect } from 'react-redux';
 import { registerAction, validationAction } from '../../actions/auth';
+import { Link } from 'react-router-dom';
 
 
 const Register = ({ registaration, validation, user }) => {
@@ -23,13 +24,16 @@ const Register = ({ registaration, validation, user }) => {
                     <input onInput={validation} type="password" className="form-control" id="password" placeholder="Password" />
                     <small className="form-text text-muted">More then 5 characters</small>
                 </div>
-                <button disabled={!user.errors.nameValid || !user.errors.emailValid || !user.errors.passwordValid} type="submit" className="btn btn-primary">Register</button>
+                <div className="button-wrapper">
+                    <button disabled={!user.errors.nameValid || !user.errors.emailValid || !user.errors.passwordValid} type="submit" className="btn btn-primary">Register</button>
+                    <Link className="btn btn-link" to="/login">Login</Link>
+                </div>
             </form>
             {user.result ? (
                 <div className={`${styled.alert} alert alert-danger`} role="alert">
                     {user.result}
                 </div>
-            ) : (null) }
+            ) : (null)}
 
         </div>
     );

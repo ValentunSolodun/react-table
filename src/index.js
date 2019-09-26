@@ -6,7 +6,7 @@ import App from './components/App'
 import rootReducer from './reducers'
 import { composeWithDevTools } from 'redux-devtools-extension';
 import thunk from 'redux-thunk';
-import { Route, Link, Router } from 'react-router-dom';
+import { Route, Router } from 'react-router-dom';
 import { history } from './helpers/history'
 // import  PrivateRoute from './components/privateRoute/privateRoute'
 

@@ -28,9 +28,18 @@ const user = (state = initialState, action) => {
         case 'REGISTERRESULT':
             return { ...state, result: action.payload }
         case 'LOGINSEND':
-            return state;
+            return { ...state }
         case 'LOGINRESULT':
-            return { ...state, result: action.payload }
+            return { ...state }
+        case 'SUCCESSFUL_USER':
+            let stateUser = { ...state };
+            stateUser.id = action.payload.id;
+            stateUser.name = action.payload.name;
+            stateUser.email = action.payload.email;
+            stateUser.result = 'Signed in';
+            return { ...stateUser }
+        case 'LOGOUT':
+            return initialState
         default:
             return state;
     }

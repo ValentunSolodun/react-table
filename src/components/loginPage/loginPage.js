@@ -2,6 +2,7 @@ import React from 'react';
 import styled from './loginPage.module.css'
 import { connect } from 'react-redux';
 import { loginAction } from '../../actions/auth';
+import { Link } from 'react-router-dom';
 
 const Login = ({ login }) => {
     return (
@@ -15,7 +16,10 @@ const Login = ({ login }) => {
                     <label htmlFor="password">Password</label>
                     <input type="password" className="form-control" id="password" placeholder="Password" />
                 </div>
-                <button type="submit" className="btn btn-primary">Enter</button>
+                <div className="button-wrapper">
+                    <button type="submit" className="btn btn-primary">Enter</button>
+                    <Link className="btn btn-link" to="/register">Register</Link>
+                </div>
             </form>
         </div>
     );

@@ -1,0 +1,15 @@
+.user_wrapper {
+    display: flex;
+    align-items: center;
+}
+.user_wrapper_img{
+    border-radius: 50%;
+}
+.name_email_wrapper {
+    margin-left: 10px;
+    display: flex;
+    flex-direction: column;
+}
+.log_out_btn {
+    margin-left: 10px;
+}

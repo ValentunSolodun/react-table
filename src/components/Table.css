@@ -10,10 +10,6 @@ table {
     position: relative;
 }
 
-button {
-    position: absolute;
-}
-
 table input {
     width: 100%;
     box-sizing: border-box;

@@ -55,15 +55,15 @@ export const loginAction = e => dispatch => {
         body: JSON.stringify(objDispatch)
     })
         .then(response => {
-            if(response.status === 403) {
+            if (response.status === 403) {
                 return "";
             }
             return response.text();
         })
         .then(
             text => {
-                if(text) {
-                    cookie.save('token', text , { path: '/' });
+                if (text) {
+                    cookie.save('token', text, { path: '/' });
                     history.push('/');
                     dispatch({ type: 'LOGINRESULT', payload: text })
                 }
@@ -78,4 +78,13 @@ export const validationAction = e => {
         type: 'VALIDATION',
         payload: { id: e.target.id, value: e.target.value }
     }
+}
+
+export const logOutAction = () => {
+    history.push('/login');
+    cookie.remove('token');
+    return {
+        type: "LOGOUT"
+    }
+
 }

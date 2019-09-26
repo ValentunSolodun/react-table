@@ -8,13 +8,6 @@ const bcrypt = require('bcrypt');
 
 process.env.SECRET_KEY = 'secret';
 
-// users.use(bodyParser.urlencoded({
-//     extended: true
-// }));
-// users.use(bodyParser.json());
-
-// users.use(cookieParser());
-
 users.post('/register', (req, res) => {
 	console.log(req.body);
 	const userObj = {
@@ -45,19 +38,18 @@ users.post('/register', (req, res) => {
 });
 
 users.post('/login', (req, res) => {
+
 	const userObj = {
 		email: req.body.email,
 		password : req.body.password
 	}
 
-
-	// console.log('login fn ');
-
 	db.query(`SELECT * FROM users WHERE email = '${userObj.email}'`).then(
 		rows => {
 
-			function generateToken(name, email) {
+			function generateToken(id, name, email) {
 				let u = {
+				 id: id,
 				 name: name,
 				 email: email,
 				};
@@ -66,21 +58,14 @@ users.post('/login', (req, res) => {
 				});
 			}
 
-			// console.log('ggg ', rows);
-
 			if(bcrypt.compareSync(userObj.password, rows[0].password)) {
-				let token = generateToken(rows[0].name, rows[0].email);
+				let token = generateToken(rows[0].id ,rows[0].name, rows[0].email);
 				// res.cookie('token', token);
 				res.send(token);
 			}else {
 				res.sendStatus(403);
 			}
 
-			// if(result.password == userObj.password) {
-			// 	console.log('PASS CORECT')
-			// }else {
-			// 	console.log('PASS UNCORECT')
-			// }
 		},
 		err => console.log(err)
 	);

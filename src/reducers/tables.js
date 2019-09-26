@@ -15,17 +15,18 @@ const tables = (state = initialState, action) => {
   }
 
   function addFields(param) {
-
+    console.log('fetch addd');
     let updateParam = {
-      columnLength: state[0].length,
+      columnLength: state[0] ? state[0].length : 1,
       rowLength: state.length,
-      type: `ADD${param}`
+      type: "ADD",
+      whatType: param
     }
 
     if (param === 'ROW') {
       apiFetch('http://localhost:3001/', updateParam);
       let newState = [];
-      for (let i = 0; i < state[0].length; i++) {
+      for (let i = 0; i < updateParam.columnLength; i++) {
         newState.push('');
       }
       return newState;
@@ -43,10 +44,11 @@ const tables = (state = initialState, action) => {
   }
 
   function removeFields(param) {
-
+    console.log("remove Fields - ", state);
     let updateParam = {
       index: param === 'ROW' ? state.length : state[0].length,
-      type: `REMOVE${param}`
+      type: "REMOVE",
+      whatType: param
     }
 
     if (param === 'ROW') {

@@ -38,7 +38,12 @@ const getTable = () => dispatch => {
                 return response.json();
             }
         })
-        .then(json => json ? dispatch({ type: 'SUCCESSFUL_DATA', payload: formatingResponse(json) }) : false);
+        .then(json => {
+            if(json) {
+                dispatch({ type: 'SUCCESSFUL_USER', payload: json.user });
+                dispatch({ type: 'SUCCESSFUL_DATA', payload: formatingResponse(json.rows)});
+            }
+        });
 
     function formatingResponse(data) {
         let array = [];

@@ -5,7 +5,7 @@ import styled from './Table.css';
 
 const Table = function (state) {
 
-    console.log(state);
+    // console.log(state);
 
     function generateTable(st) {
         if(st.tables.loading === true) return <tr><td>Loading...</td></tr>
@@ -13,7 +13,7 @@ const Table = function (state) {
         else {
             return st.tables.map((item, indexRow) => {
                 return (
-                    <tr key={indexRow}>{item.map((item, indexCol) => <td key={indexCol}> <input onInput={event => state.changeCl(indexCol, indexRow, event.target.value)} type="text" defaultValue={item} /></td>)}</tr>
+                    <tr key={indexRow}>{item.map((item, indexCol) => <td key={indexCol}> <input onChange={event => state.changeCl(indexCol, indexRow, event.target.value)} type="text" defaultValue={item} /></td>)}</tr>
                 );
             });
         }

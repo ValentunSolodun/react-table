@@ -27,38 +27,39 @@ app.use('/', (req, res, next) => {
 	
 	let token = req.headers.token;
 
-	// console.log("req - ", token);
-	// console.log("token middle -" , token, process.env.SECRET_KEY);
-
-	// console.log(req.body.token);
-
-	// if(req.path != '/login' || req.path != '/register') {
-	// 	console.log(token);
-	// }
-
-	res.setHeader('content-type', 'application/json');
-
-
 	jwt.verify(token, process.env.SECRET_KEY, (err, data) => {
 		if (err) {
 			res.sendStatus(403);
 		}else {
-			// res.send({'test' : 'test'});
-			// res.end();
+			req.user = data;
 			next();
 		}
-		// console.log('token VALID');
-		// res.send({status: true});
 		
 	});	
 });
 
 
 app.get('/', (req, res) => {
-	db.query("SELECT * FROM texts").then(rows => res.send(rows));
+
+	let user = req.user;
+
+	db.query(`SELECT * FROM texts WHERE id_user = '${user.id}' `).then(rows => res.send({rows, user}));
 });
 app.post('/', (req, res) => {
 
+	let idUser;
+
+	jwt.verify(req.headers.token, process.env.SECRET_KEY, (err, data) => {
+		if (err) {
+			res.sendStatus(403);
+			return;
+		}else {
+			idUser = data.id;
+		}
+		
+	});	
+
+	// console.log(req.headers.token);
 	function resultQuery(err, result) {
 		if(err) throw new Error(err);
 		console.log('UPDATED');
@@ -67,43 +68,37 @@ app.post('/', (req, res) => {
 	function addFields(type, columnLength, rowLength) {
 		if(type === 'ADDROW') {
 			for(let i = 0; i < columnLength; i++) {
-				db.query(`INSERT into texts (id_row, id_column, text, id_user) VALUES (${rowLength}, ${i}, ' ', 1)`).then(done => resultQuery(false, done));
+				db.query(`INSERT into texts (id_row, id_column, text, id_user) VALUES (${rowLength}, ${i}, ' ', ${idUser})`).then(done => resultQuery(false, done));
 			}
 		}else if(type === 'ADDCOLUMN') {
 			for(let i = 0; i < rowLength; i++) {
-				db.query(`INSERT into texts (id_row, id_column, text, id_user) VALUES (${i}, ${columnLength}, ' ', 1)`).then(done => resultQuery(false, done));
+				db.query(`INSERT into texts (id_row, id_column, text, id_user) VALUES (${i}, ${columnLength}, ' ', ${idUser})`).then(done => resultQuery(false, done));
 			}
 		}
 	}
 
 	function removeFields(type, index) {
 		if(type === 'REMOVEROW') {
-			one = db.query(`DELETE FROM texts WHERE id_row = ${index - 1}`).then(done => resultQuery(false, done));
+			one = db.query(`DELETE FROM texts WHERE id_row = ${index - 1} AND id_user = ${idUser}`).then(done => resultQuery(false, done));
 		}else if(type === 'REMOVECOLUMN') {
-			one = db.query(`DELETE FROM texts WHERE id_column = ${index - 1}`).then(done => resultQuery(false, done));
+			one = db.query(`DELETE FROM texts WHERE id_column = ${index - 1} AND id_user = ${idUser}`).then(done => resultQuery(false, done));
 		}
 
 	}
 
 	function updateCell(value, idRow, idCol) {
-		db.query(`UPDATE texts SET text = '${value}' WHERE id_row = ${idRow} AND id_column = ${idCol}`);
+		db.query(`UPDATE texts SET text = '${value}' WHERE id_row = ${idRow} AND id_column = ${idCol} AND id_user = ${idUser}`).then(done => resultQuery(false, done));
 	}
 
 	switch(req.body.type) {
 		case 'UPDATE':
 		 	updateCell(req.body.value, req.body.idRow, req.body.idCol);
 			break;
-		case 'ADDROW':
-			addFields(req.body.type ,req.body.columnLength, req.body.rowLength);
+		case 'ADD':
+			addFields(`${req.body.type}${req.body.whatType}`,req.body.columnLength, req.body.rowLength);
 			break;
-		case 'REMOVEROW':
-			removeFields(req.body.type, req.body.index);
-			break;
-		case 'ADDCOLUMN':
-			addFields(req.body.type ,req.body.columnLength, req.body.rowLength);
-			break;
-		case 'REMOVECOLUMN':
-			removeFields(req.body.type, req.body.index);
+		case 'REMOVE':
+			removeFields(`${req.body.type}${req.body.whatType}`, req.body.index);
 			break;
 		default :
 			console.log('default');	
